@@ -8,6 +8,7 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { createTestEnv } from '../test/helpers/test-env.js';
 import { readSearchAnswer } from '../test/helpers/mcp-client.js';
+import { callToolOnceLoaded } from '../test/helpers/heavy-packages.js';
 import ExcelJS from 'exceljs';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
@@ -48,14 +49,26 @@ try {
   const image = await sharp({ create: { width: 2, height: 2, channels: 3, background: 'white' } }).png().toBuffer();
   assert.equal((await sharp(image).metadata()).width, 2);
   const pdf = await PDFDocument.create();
-  pdf.addPage();
-  assert.equal((await PDFDocument.load(await pdf.save())).getPageCount(), 1);
+  const page = pdf.addPage();
+  page.drawText('reviewed PDF extraction', { x: 20, y: 720 });
+  page.drawImage(await pdf.embedPng(image), { x: 20, y: 680, width: 12, height: 12 });
+  const pdfBytes = await pdf.save();
+  assert.equal((await PDFDocument.load(pdfBytes)).getPageCount(), 1);
   assert.match(execFileSync(rgPath, ['--version'], { encoding: 'utf8' }), /^ripgrep /);
 
   await client.connect(transport);
   const tools = (await client.listTools()).tools;
   assert.ok(tools.length >= 25);
   assert.ok(tools.every(tool => tool.inputSchema.type === 'object'));
+  const pdfFile = path.join(testEnv.home, 'reviewed PDF.pdf');
+  await fs.writeFile(pdfFile, pdfBytes);
+  const pdfResult = await callToolOnceLoaded(client, { name: 'read_file', arguments: { path: pdfFile } },
+    { timeoutMs: 30_000, requestOptions: { timeout: 30_000 } });
+  assert.ok(!pdfResult.isError, `installed PDF read failed: ${text(pdfResult)}`);
+  assert.match(text(pdfResult), /reviewed PDF extraction/);
+  const extractedImage = pdfResult.content.find(item => item.type === 'image');
+  assert.ok(extractedImage, 'installed PDF reader must return its embedded image');
+  assert.equal((await sharp(Buffer.from(extractedImage.data, 'base64')).metadata()).width, 2);
   const file = path.join(testEnv.home, 'reviewed smoke.txt');
   await call('write_file', { path: file, content: 'reviewed-source-smoke\n' });
   assert.match(text(await call('read_file', { path: file })), /reviewed-source-smoke/);

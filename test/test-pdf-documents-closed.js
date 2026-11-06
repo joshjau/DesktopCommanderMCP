@@ -105,6 +105,26 @@ async function run() {
     await check('extracting the images of a PDF closes the document it opens', 'extracting the images of a PDF', 1, async () => {
       await extractImagesFromPdf(new Uint8Array(fs.readFileSync(pdf)));
     });
+    await check('PDF image extraction preserves RGBA pixels and dimensions', 'extracting an embedded image', 1, async () => {
+      const sharp = require('sharp');
+      const { PDFDocument } = require('pdf-lib');
+      const png = await sharp({ create: {
+        width: 2, height: 3, channels: 4, background: { r: 0, g: 190, b: 240, alpha: 1 },
+      } }).png().toBuffer();
+      const document = await PDFDocument.create();
+      const embedded = await document.embedPng(png);
+      document.addPage([30, 30]).drawImage(embedded, { x: 1, y: 1, width: 12, height: 18 });
+      const images = await extractImagesFromPdf(await document.save(), [1], { format: 'webp', quality: 100 });
+      assert.equal(images[1].length, 1, 'RGBA images must not be silently dropped');
+      const image = images[1][0];
+      assert.equal(image.width, 2);
+      assert.equal(image.height, 3);
+      assert.equal(image.mimeType, 'image/webp');
+      const decoded = await sharp(Buffer.from(image.data, 'base64')).ensureAlpha().raw().toBuffer();
+      assert.equal(decoded.length, 2 * 3 * 4);
+      assert(decoded[0] < 15 && decoded[1] > 175 && decoded[2] > 225);
+      assert.equal(decoded[3], 255);
+    });
     await check('read_file of a PDF whose image extraction fails still closes the text document, and answers with the error', 'read_file of a PDF whose image extraction failed', 1, async () => {
       const failure = 'the PDF images could not be extracted (test)';
       const load = unpdfPackage.load;
@@ -121,7 +141,7 @@ async function run() {
     ws.cleanup();
   }
   if (failures.length > 0) {
-    console.log(`${failures.length} of 3 cases failed`);
+    console.log(`${failures.length} of 4 cases failed`);
     return false;
   }
   return true;

@@ -70,7 +70,7 @@ export async function extractImagesFromPdf(
 
                 try {
                     // Use unpdf's built-in extractImages
-                    const extractedImages = await extractImages(pdfDocument, pageNum);
+                    const extractedImages = await extractImages(pdfDocument, pageNum, { format: 'rgba' });
 
                     const pageImages: ImageInfo[] = [];
 
@@ -83,7 +83,7 @@ export async function extractImagesFromPdf(
                                 img.data,
                                 img.width,
                                 img.height,
-                                img.channels,
+                                4, // unpdf 2 returns four RGBA bytes per pixel.
                                 compressionOptions
                             );
 
@@ -136,7 +136,7 @@ export async function extractImagesFromPdf(
  * Convert raw image data to compressed base64 using sharp
  */
 async function convertRawImageToBase64(
-    data: Uint8ClampedArray,
+    data: Uint8Array,
     width: number,
     height: number,
     channels: number,
@@ -163,7 +163,7 @@ async function convertRawImageToBase64(
         const sharp = (await import('sharp')).default;
 
         // sharp takes Buffer, Uint8Array, etc.
-        // unpdf returns Uint8ClampedArray, which works with Buffer.from()
+        // unpdf returns raw RGBA bytes, which Buffer.from() preserves.
         let pipeline = sharp(Buffer.from(data), {
             raw: {
                 width,

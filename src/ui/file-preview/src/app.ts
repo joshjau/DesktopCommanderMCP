@@ -466,7 +466,7 @@ export function bootstrapApp(): void {
 
     const app = new App(
         { name: 'Desktop Commander File Preview', version: '1.0.0' },
-        { updateModelContext: { text: {} } },
+        {}, // Context updates are a host capability, not an app capability.
         { autoResize: true },
     );
 

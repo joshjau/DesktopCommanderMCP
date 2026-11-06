@@ -1,4 +1,4 @@
-import { App, applyDocumentTheme, applyHostFonts, applyHostStyleVariables } from '@modelcontextprotocol/ext-apps';
+import { App, applyDocumentTheme, applyHostFonts, applyHostStyleVariables, type McpUiStyles } from '@modelcontextprotocol/ext-apps';
 
 export interface UiChromeState {
     expanded: boolean;
@@ -32,7 +32,8 @@ export function applySharedHostContext(context: unknown, chrome: UiChromeState):
     const fonts = typeof css?.fonts === 'string' ? css.fonts : null;
 
     if (variables) {
-        applyHostStyleVariables(variables as Record<string, string>);
+        // Hosts send partial token updates; the SDK applies the entries that are present.
+        applyHostStyleVariables(variables as McpUiStyles);
     }
     if (fonts) {
         applyHostFonts(fonts);

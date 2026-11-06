@@ -245,8 +245,7 @@ export default async function runTests() {
     }
 
     // PDF reading support (unpdf, loaded with import()) failing to load once. Only the
-    // import() fails: @opendocsg/pdf2md 0.3.4 shares this unpdf and require()s it, and a
-    // failed require() can be tried again, so failing that one first rightly says "try again".
+    // import() fails; the text converter has a separate pinned CommonJS copy.
     const failingImport = await startServerRecordingModules({ failPackageOnce: 'unpdf', failOnly: 'import' });
     try {
       await runCases(failures, [[testFailedImportSaysRestart, failingImport, heldPdf]]);
@@ -254,8 +253,10 @@ export default async function runTests() {
       await failingImport.close();
     }
 
-    // The same unpdf failing once in pdf2md's require() of it: that can be tried again
-    const failingRequire = await startServerRecordingModules({ failPackageOnce: 'unpdf', failOnly: 'require' });
+    // Fail the converter's nested copy, so its retry path is still exercised.
+    const failingRequire = await startServerRecordingModules({
+      failPackageOnce: '@opendocsg/pdf2md/node_modules/unpdf', failOnly: 'require',
+    });
     try {
       await runCases(failures, [[testFailedRequireTriesAgain, failingRequire, heldPdf]]);
     } finally {

@@ -48,7 +48,9 @@ async function mountBundle(target, callTool, hostContext = {}) {
       try {
         let result;
         if (message.method === 'ui/initialize') {
-          result = { protocolVersion: message.params.protocolVersion,
+          assert.equal(message.params.appCapabilities.updateModelContext, undefined,
+            'context updates belong to host capabilities');
+          result = { protocolVersion: '2026-01-26',
             hostInfo: { name: 'Inert UI test host', version: '1.0.0' },
             hostCapabilities: { serverTools: {}, updateModelContext: {} },
             hostContext: { theme: 'light', displayMode: 'inline', availableDisplayModes: ['inline', 'fullscreen'],
@@ -126,9 +128,12 @@ async function testConfigEditorBundle() {
     }
     if (name === 'track_ui_event') return { content: [] };
     throw new Error(`Unexpected config tool: ${name}`);
-  });
+  }, { theme: 'dark', styles: { variables: { '--color-background-primary': 'rgb(1, 2, 3)' } } });
   try {
     await waitFor(() => view.window.document.querySelector('[data-action="toggle-boolean"]'), 'synthetic config payload');
+    assert.equal(view.window.document.documentElement.dataset.theme, 'dark');
+    assert.equal(view.window.document.documentElement.style.getPropertyValue('--color-background-primary'), 'rgb(1, 2, 3)',
+      'partial host style tokens remain supported');
     view.window.document.querySelector('[data-action="toggle-boolean"]').click();
     await waitFor(() => enabled, 'typed config update through the real bridge');
     assert.ok(view.calls.some((call) => call.name === 'set_config_value'));

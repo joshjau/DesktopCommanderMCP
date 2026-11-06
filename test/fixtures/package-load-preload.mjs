@@ -3,8 +3,8 @@
 // DC_TEST_FAIL_PACKAGE_ONCE that runs throws, as a broken package does, whether
 // require() or import() loads it (DC_TEST_FAILED_MARKER records that it did).
 // Node keeps such an import() failed; a require() can try again. Only the
-// server's own copy (node_modules/<package> in its working folder) fails, not
-// one another package carries (@opendocsg/pdf2md has its own unpdf).
+// explicitly selected copy under node_modules fails. A nested package path
+// selects a converter's own dependency without affecting the root copy.
 import fs from 'node:fs';
 import Module from 'node:module';
 import path from 'node:path';
