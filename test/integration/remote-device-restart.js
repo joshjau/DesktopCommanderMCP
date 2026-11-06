@@ -33,7 +33,8 @@
  *     saving it, twice in a row: a Restart=always loop on a flaky network
  *   - the shutdown script (blocking-offline-update.js) refreshing the token it
  *     was handed and keeping nothing
- *   - a refresh refused once: auth-js drops the session, the device restores it
+ *   - a transient refresh failure: the session stays usable, subsequent
+ *     rotations are saved, and the device reconnects after a restart
  *
  * And the other way round: `remote --logout` while the device runs must stick.
  * The device keeps running on its session, but must not write device.json back
@@ -206,23 +207,41 @@ async function runTests() {
     await expectReconnected(start(), standIn, `the shutdown script rotated the saved token (${saved})`);
   });
 
-  await test('a refresh refused once (auth-js drops the session) does not lock the device out', async ({ standIn, home, start }) => {
+  await test('a transient refresh failure does not lock the device out', async ({ standIn, home, start }) => {
     standIn.accessTtlSec = ROTATING_ACCESS_TTL_SEC;
     writeLoggedInHome(home, standIn, standIn.login());
 
     const running = start();
     await expectStarted(running, standIn, 'the first start, right after login');
-    // auth-js treats a 500 as final: it drops the session and emits SIGNED_OUT
+    const rotationsBeforeFailure = standIn.rotations();
+    const savedGenerationBeforeFailure = standIn.generationOf(readPersistedSession(home)?.refresh_token);
+    // Current auth-js retries a 500 without dropping a still-usable session.
+    // Check the user's outcome rather than requiring a particular auth event
+    // or a session-restore log message from an older client implementation.
     standIn.failRefreshes(1, 500);
-    const restored = /Remote session restored after a transient sign-out/;
-    await waitFor(running, () => restored.test(running.output), ROTATION_DEADLINE_MS);
-    assert.ok(restored.test(running.output),
-      `setup: the device was meant to restore its session after one refused refresh (${standIn.describe()}). Its output:\n${tail(running.output)}`);
+    const refreshRecovered = () => {
+      const failed = standIn.refreshes.findIndex((refresh) => refresh.outcome === 'failed-500');
+      return failed !== -1 && standIn.rotations() > rotationsBeforeFailure
+        && standIn.refreshes.slice(failed + 1).some((refresh) => refresh.outcome === 'rotated');
+    };
+    await waitFor(running, refreshRecovered, ROTATION_DEADLINE_MS);
+    assert.ok(refreshRecovered() && !running.exited
+      && standIn.refreshes.filter((refresh) => refresh.outcome === 'failed-500').length === 1
+      && standIn.deviceFlowRequests === 0 && !/Authenticating with Remote MCP server/.test(running.output),
+    `after one transient 500, the device did not resume refreshing on its own (${standIn.describe()}). Its output:\n${tail(running.output)}`);
     await rotateWhileRunning(running, standIn, 1);
+    const currentSessionSaved = () => {
+      const savedToken = readPersistedSession(home)?.refresh_token;
+      const generation = standIn.generationOf(savedToken);
+      return generation > savedGenerationBeforeFailure && generation === standIn.currentGeneration(savedToken);
+    };
+    await waitFor(running, currentSessionSaved, START_DEADLINE_MS);
+    assert.ok(currentSessionSaved(),
+      `after recovery, the device did not save the current rotated token (${persistedGeneration(home, standIn)}). Its output:\n${tail(running.output)}`);
     await stopHard(running);
 
     const saved = persistedGeneration(home, standIn);
-    await expectReconnected(start(), standIn, `a refused refresh, a restore and a restart (${saved})`);
+    await expectReconnected(start(), standIn, `a transient 500, subsequent rotations and a restart (${saved})`);
   });
 
   await test('a logout while the device runs sticks: device.json is not written back', async ({ standIn, env, home, start }) => {

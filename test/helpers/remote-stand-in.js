@@ -371,15 +371,35 @@ export async function startRemoteStandIn({
       return;
     }
     sockets.handleUpgrade(request, socket, head, (ws) => {
+      // realtime-js now defaults to Phoenix v2's JSON array frames. Keep v1
+      // object frames for tests of older clients, and reply in the negotiated
+      // format so the real client's join/presence/heartbeat refs can settle.
+      const v2 = new URL(request.url, standIn.url).searchParams.get('vsn') === '2.0.0';
       ws.on('message', (data) => {
         let message;
-        try { message = JSON.parse(String(data)); } catch { return; }
+        try {
+          const frame = JSON.parse(String(data));
+          if (v2) {
+            if (!Array.isArray(frame) || frame.length !== 5) return;
+            const [join_ref, ref, topic, event, payload] = frame;
+            message = { join_ref, ref, topic, event, payload };
+          } else {
+            if (!frame || Array.isArray(frame) || typeof frame !== 'object') return;
+            message = frame;
+          }
+        } catch { return; }
+        const reply = () => {
+          const payload = { status: 'ok', response: {} };
+          ws.send(JSON.stringify(v2
+            ? [message.join_ref ?? null, message.ref, message.topic, 'phx_reply', payload]
+            : { topic: message.topic, event: 'phx_reply', payload, ref: message.ref, join_ref: message.join_ref }));
+        };
         if (message.topic === 'phoenix' && message.event === 'heartbeat') {
           standIn.heartbeatsAnswered++;
-          ws.send(JSON.stringify({ topic: 'phoenix', event: 'phx_reply', payload: { status: 'ok', response: {} }, ref: message.ref }));
+          reply();
         } else if (channel && message.ref) {
           // A join, a presence track, a new access token: accepted, as the realtime server answers them
-          ws.send(JSON.stringify({ topic: message.topic, event: 'phx_reply', payload: { status: 'ok', response: {} }, ref: message.ref, join_ref: message.join_ref }));
+          reply();
         }
       });
     });

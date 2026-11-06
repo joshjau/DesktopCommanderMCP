@@ -1,0 +1,6556 @@
+{
+  "baseline": {
+    "release": "0.3.1",
+    "sourceCommit": "7251da501d760e6eb5f95d802d9b42c741190950",
+    "schemaModuleSha256": "7d4c62e2099d757d8fba68011cfe25d3088426f56c0b77d5b8fa3edb4ec49c2c",
+    "zod": "3.25.76",
+    "converter": "3.25.2"
+  },
+  "tools": {
+    "get_config": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "set_config_value": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "key",
+        "value"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "read_file": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "isUrl": {
+          "type": "boolean",
+          "default": false
+        },
+        "offset": {
+          "type": "number",
+          "default": 0
+        },
+        "length": {
+          "type": "number",
+          "default": 1000
+        },
+        "sheet": {
+          "type": "string"
+        },
+        "range": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "read_multiple_files": {
+      "type": "object",
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "paths"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "write_file": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "rewrite",
+            "append"
+          ],
+          "default": "rewrite"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "write_pdf": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "insert"
+                      },
+                      "pageIndex": {
+                        "type": "number"
+                      },
+                      "markdown": {
+                        "type": "string"
+                      },
+                      "sourcePdfPath": {
+                        "type": "string"
+                      },
+                      "pdfOptions": {
+                        "type": "object",
+                        "properties": {},
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "pageIndex"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "delete"
+                      },
+                      "pageIndexes": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "pageIndexes"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "outputPath": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "create_directory": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "list_directory": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "depth": {
+          "type": "number",
+          "default": 2
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "move_file": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "destination": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "destination"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "start_search": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "searchType": {
+          "type": "string",
+          "enum": [
+            "files",
+            "content"
+          ],
+          "default": "files"
+        },
+        "filePattern": {
+          "type": "string"
+        },
+        "ignoreCase": {
+          "type": "boolean",
+          "default": true
+        },
+        "maxResults": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "includeHidden": {
+          "type": "boolean",
+          "default": false
+        },
+        "contextLines": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "earlyTermination": {
+          "type": "boolean"
+        },
+        "literalSearch": {
+          "type": "boolean",
+          "default": false
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "pattern"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "get_more_search_results": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string"
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 100
+        }
+      },
+      "required": [
+        "sessionId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "stop_search": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "sessionId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "list_searches": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "get_file_info": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "edit_block": {
+      "type": "object",
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "old_string": {
+          "type": "string"
+        },
+        "new_string": {
+          "type": "string"
+        },
+        "expected_replacements": {
+          "type": "number",
+          "default": 1
+        },
+        "range": {
+          "type": "string"
+        },
+        "content": {},
+        "options": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "file_path"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "start_process": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "timeout_ms": {
+          "type": "number"
+        },
+        "shell": {
+          "type": "string"
+        },
+        "verbose_timing": {
+          "type": "boolean"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "ui",
+            "llm"
+          ]
+        }
+      },
+      "required": [
+        "command",
+        "timeout_ms"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "read_process_output": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "number"
+        },
+        "timeout_ms": {
+          "type": "number"
+        },
+        "offset": {
+          "type": "number"
+        },
+        "length": {
+          "type": "number"
+        },
+        "verbose_timing": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "pid"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "interact_with_process": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "number"
+        },
+        "input": {
+          "type": "string"
+        },
+        "timeout_ms": {
+          "type": "number"
+        },
+        "wait_for_prompt": {
+          "type": "boolean"
+        },
+        "verbose_timing": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "pid",
+        "input"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "force_terminate": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "pid"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "list_sessions": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "list_processes": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "kill_process": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "pid"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "get_usage_stats": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "get_recent_tool_calls": {
+      "type": "object",
+      "properties": {
+        "maxResults": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 50
+        },
+        "toolName": {
+          "type": "string"
+        },
+        "since": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "give_feedback_to_desktop_commander": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "track_ui_event": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "component": {
+          "type": "string",
+          "default": "file_preview"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "default": {}
+        }
+      },
+      "required": [
+        "event"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  "validation": [
+    {
+      "tool": "get_config",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "get_config",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "get_config",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "minimum valid arguments",
+      "input": {
+        "key": "example",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "key": "example",
+        "value": [
+          "sample"
+        ],
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "missing key",
+      "input": {
+        "value": [
+          "sample"
+        ]
+      },
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "missing value",
+      "input": {
+        "key": "example"
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample.txt"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample.txt",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "missing path",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "minimum valid arguments",
+      "input": {
+        "paths": [
+          "sample.txt"
+        ]
+      },
+      "success": true,
+      "data": {
+        "paths": [
+          "sample.txt"
+        ]
+      }
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "paths": [
+          "sample.txt"
+        ],
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "paths": [
+          "sample.txt"
+        ]
+      }
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "read_multiple_files",
+      "label": "missing paths",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample.txt",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample.txt",
+        "content": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "missing path",
+      "input": {
+        "content": "sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "missing content",
+      "input": {
+        "path": "sample.txt"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample.pdf",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample.pdf",
+        "content": "# Example",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "missing path",
+      "input": {
+        "content": "# Example"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "missing content",
+      "input": {
+        "path": "sample.pdf"
+      },
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "sample"
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample"
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "missing path",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "missing path",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "minimum valid arguments",
+      "input": {
+        "source": "before.txt",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": "before.txt",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "source": "before.txt",
+        "destination": "after.txt",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "source": "before.txt",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "missing source",
+      "input": {
+        "destination": "after.txt"
+      },
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "missing destination",
+      "input": {
+        "source": "before.txt"
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "missing path",
+      "input": {
+        "pattern": "needle"
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "missing pattern",
+      "input": {
+        "path": "sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "minimum valid arguments",
+      "input": {
+        "sessionId": "sample"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "sessionId": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "missing sessionId",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "minimum valid arguments",
+      "input": {
+        "sessionId": "sample"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample"
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "sessionId": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample"
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "missing sessionId",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "list_searches",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_searches",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_searches",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "list_searches",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "list_searches",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "list_searches",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "list_searches",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "minimum valid arguments",
+      "input": {
+        "path": "sample.txt"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt"
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "path": "sample.txt",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt"
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "missing path",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "minimum valid arguments",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "missing file_path",
+      "input": {
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "minimum valid arguments",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 100,
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "missing command",
+      "input": {
+        "timeout_ms": 100
+      },
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "missing timeout_ms",
+      "input": {
+        "command": "echo sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "minimum valid arguments",
+      "input": {
+        "pid": 123
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "pid": 123,
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "read_process_output",
+      "label": "missing pid",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "minimum valid arguments",
+      "input": {
+        "pid": 123,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "missing pid",
+      "input": {
+        "input": "sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "missing input",
+      "input": {
+        "pid": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "minimum valid arguments",
+      "input": {
+        "pid": 123
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "pid": 123,
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "force_terminate",
+      "label": "missing pid",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "list_sessions",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_sessions",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_sessions",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "list_sessions",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "list_sessions",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "list_sessions",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "list_sessions",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "list_processes",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_processes",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "list_processes",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "list_processes",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "list_processes",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "list_processes",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "list_processes",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "minimum valid arguments",
+      "input": {
+        "pid": 123
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "pid": 123,
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "pid": 123
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "missing pid",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "get_usage_stats",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {
+        "maxResults": 50
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "minimum valid arguments",
+      "input": {},
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {}
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "give_feedback_to_desktop_commander",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "minimum valid arguments",
+      "input": {
+        "event": "sample"
+      },
+      "success": true,
+      "data": {
+        "event": "sample",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "unknown top-level key stripped",
+      "input": {
+        "event": "sample",
+        "unsupported": "ignored"
+      },
+      "success": true,
+      "data": {
+        "event": "sample",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "invalid root null",
+      "input": null,
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "invalid root []",
+      "input": [],
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "invalid root 1",
+      "input": 1,
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "invalid root \"invalid\"",
+      "input": "invalid",
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "invalid root false",
+      "input": false,
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "missing event",
+      "input": {},
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults boundary -1",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults boundary 0",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 0,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults boundary 1.5",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults boundary 9007199254740992",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 9007199254740992,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset boundary -1",
+      "input": {
+        "sessionId": "sample",
+        "offset": -1
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": -1,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset boundary 0",
+      "input": {
+        "sessionId": "sample",
+        "offset": 0
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset boundary 1.5",
+      "input": {
+        "sessionId": "sample",
+        "offset": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset boundary 9007199254740992",
+      "input": {
+        "sessionId": "sample",
+        "offset": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 9007199254740992,
+        "length": 100
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid 0",
+      "input": {
+        "pid": 0
+      },
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid -1",
+      "input": {
+        "pid": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid 1.5",
+      "input": {
+        "pid": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 1.5
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid 9007199254740992",
+      "input": {
+        "pid": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 9007199254740992
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content \"[{\\\"type\\\":\\\"delete\\\",\\\"pageIndexes\\\":[0]}]\"",
+      "input": {
+        "path": "sample.pdf",
+        "content": "[{\"type\":\"delete\",\"pageIndexes\":[0]}]",
+        "options": {
+          "custom": true
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "delete",
+            "pageIndexes": [
+              0
+            ]
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content \"[invalid markdown\"",
+      "input": {
+        "path": "sample.pdf",
+        "content": "[invalid markdown",
+        "options": {
+          "custom": true
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": "[invalid markdown",
+        "options": {
+          "custom": true
+        }
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content []",
+      "input": {
+        "path": "sample.pdf",
+        "content": [],
+        "options": {
+          "custom": true
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": [],
+        "options": {
+          "custom": true
+        }
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content [{\"type\":\"insert\",\"pageIndex\":0,\"pdfOptions\":{\"margin\":\"2cm\",\"nested\":{\"flag\":true}},\"ignored\":true}]",
+      "input": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "insert",
+            "pageIndex": 0,
+            "pdfOptions": {
+              "margin": "2cm",
+              "nested": {
+                "flag": true
+              }
+            },
+            "ignored": true
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "insert",
+            "pageIndex": 0,
+            "pdfOptions": {
+              "margin": "2cm",
+              "nested": {
+                "flag": true
+              }
+            }
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content [{\"type\":\"delete\",\"pageIndexes\":[0,1],\"ignored\":true}]",
+      "input": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "delete",
+            "pageIndexes": [
+              0,
+              1
+            ],
+            "ignored": true
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "delete",
+            "pageIndexes": [
+              0,
+              1
+            ]
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "PDF content [{\"type\":\"delete\",\"pageIndexes\":\"invalid\"}]",
+      "input": {
+        "path": "sample.pdf",
+        "content": [
+          {
+            "type": "delete",
+            "pageIndexes": "invalid"
+          }
+        ],
+        "options": {
+          "custom": true
+        }
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "edit alternatives {\"file_path\":\"x\"}",
+      "input": {
+        "file_path": "x"
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "edit alternatives {\"file_path\":\"x\",\"old_string\":\"\",\"new_string\":\"x\"}",
+      "input": {
+        "file_path": "x",
+        "old_string": "",
+        "new_string": "x"
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "edit alternatives {\"file_path\":\"x\",\"old_string\":\"x\",\"new_string\":\"\"}",
+      "input": {
+        "file_path": "x",
+        "old_string": "x",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "x",
+        "old_string": "x",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "edit alternatives {\"file_path\":\"x\",\"range\":\"A1:B2\",\"content\":[[1,2]]}",
+      "input": {
+        "file_path": "x",
+        "range": "A1:B2",
+        "content": [
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "success": true,
+      "data": {
+        "file_path": "x",
+        "expected_replacements": 1,
+        "range": "A1:B2",
+        "content": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "edit alternatives {\"file_path\":\"x\",\"range\":\"\",\"content\":\"value\"}",
+      "input": {
+        "file_path": "x",
+        "range": "",
+        "content": "value"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime 2026-11-06T00:00:00Z",
+      "input": {
+        "since": "2026-11-06T00:00:00Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "2026-11-06T00:00:00Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime 2026-11-06T00:00:00+08:00",
+      "input": {
+        "since": "2026-11-06T00:00:00+08:00"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime not-a-date",
+      "input": {
+        "since": "not-a-date"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime 2026-02-30T00:00:00Z",
+      "input": {
+        "since": "2026-02-30T00:00:00Z"
+      },
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value \"text\"",
+      "input": {
+        "key": "example",
+        "value": "text"
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": "text"
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value 42",
+      "input": {
+        "key": "example",
+        "value": 42
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": 42
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value true",
+      "input": {
+        "key": "example",
+        "value": true
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": true
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value null",
+      "input": {
+        "key": "example",
+        "value": null
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": null
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value [\"text\"]",
+      "input": {
+        "key": "example",
+        "value": [
+          "text"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "example",
+        "value": [
+          "text"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "config value {\"nested\":true}",
+      "input": {
+        "key": "example",
+        "value": {
+          "nested": true
+        }
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event record {\"event\":\"sample\",\"params\":{\"name\":\"value\",\"n\":1,\"ok\":true,\"empty\":null}}",
+      "input": {
+        "event": "sample",
+        "params": {
+          "name": "value",
+          "n": 1,
+          "ok": true,
+          "empty": null
+        }
+      },
+      "success": true,
+      "data": {
+        "event": "sample",
+        "component": "file_preview",
+        "params": {
+          "name": "value",
+          "n": 1,
+          "ok": true,
+          "empty": null
+        }
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event record {\"event\":\"sample\",\"params\":{\"nested\":{\"invalid\":true}}}",
+      "input": {
+        "event": "sample",
+        "params": {
+          "nested": {
+            "invalid": true
+          }
+        }
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event record {\"event\":\"\"}",
+      "input": {
+        "event": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event record {\"event\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+      "input": {
+        "event": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06T00:00Z",
+      "input": {
+        "since": "2026-11-06T00:00Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "2026-11-06T00:00Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06T00:00:00Z",
+      "input": {
+        "since": "2026-11-06T00:00:00Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "2026-11-06T00:00:00Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06T00:00:00.123456789Z",
+      "input": {
+        "since": "2026-11-06T00:00:00.123456789Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "2026-11-06T00:00:00.123456789Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06t00:00:00z",
+      "input": {
+        "since": "2026-11-06t00:00:00z"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06T24:00:00Z",
+      "input": {
+        "since": "2026-11-06T24:00:00Z"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-12-31T23:59:60Z",
+      "input": {
+        "since": "2026-12-31T23:59:60Z"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 0000-01-01T00:00:00Z",
+      "input": {
+        "since": "0000-01-01T00:00:00Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "0000-01-01T00:00:00Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2024-02-29T00:00:00Z",
+      "input": {
+        "since": "2024-02-29T00:00:00Z"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "since": "2024-02-29T00:00:00Z"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-02-29T00:00:00Z",
+      "input": {
+        "since": "2026-02-29T00:00:00Z"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "datetime precision 2026-11-06T00:00:00+0000",
+      "input": {
+        "since": "2026-11-06T00:00:00+0000"
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 0",
+      "input": {
+        "path": "sample.txt",
+        "offset": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 5e-324",
+      "input": {
+        "path": "sample.txt",
+        "offset": 5e-324
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 5e-324,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 1.5",
+      "input": {
+        "path": "sample.txt",
+        "offset": 1.5
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 1.5,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric -1",
+      "input": {
+        "path": "sample.txt",
+        "offset": -1
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": -1,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 1e+308",
+      "input": {
+        "path": "sample.txt",
+        "offset": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 1e+308,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric -1e+308",
+      "input": {
+        "path": "sample.txt",
+        "offset": -1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": -1e+308,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample.txt",
+        "offset": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 1.7976931348623157e+308,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "offset numeric 9007199254740992",
+      "input": {
+        "path": "sample.txt",
+        "offset": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 9007199254740992,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 0",
+      "input": {
+        "path": "sample.txt",
+        "length": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 0
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 5e-324",
+      "input": {
+        "path": "sample.txt",
+        "length": 5e-324
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 5e-324
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 1.5",
+      "input": {
+        "path": "sample.txt",
+        "length": 1.5
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1.5
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric -1",
+      "input": {
+        "path": "sample.txt",
+        "length": -1
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": -1
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 1e+308",
+      "input": {
+        "path": "sample.txt",
+        "length": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1e+308
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric -1e+308",
+      "input": {
+        "path": "sample.txt",
+        "length": -1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": -1e+308
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample.txt",
+        "length": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "length numeric 9007199254740992",
+      "input": {
+        "path": "sample.txt",
+        "length": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 9007199254740992
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 0",
+      "input": {
+        "path": "sample",
+        "depth": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 0
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 5e-324",
+      "input": {
+        "path": "sample",
+        "depth": 5e-324
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 5e-324
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 1.5",
+      "input": {
+        "path": "sample",
+        "depth": 1.5
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 1.5
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric -1",
+      "input": {
+        "path": "sample",
+        "depth": -1
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": -1
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 1e+308",
+      "input": {
+        "path": "sample",
+        "depth": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 1e+308
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric -1e+308",
+      "input": {
+        "path": "sample",
+        "depth": -1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": -1e+308
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample",
+        "depth": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "depth numeric 9007199254740992",
+      "input": {
+        "path": "sample",
+        "depth": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "depth": 9007199254740992
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 0",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 0,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 5e-324",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 1.5",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric -1",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 1e+308,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric -1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 1.7976931348623157e+308,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "maxResults numeric 9007199254740992",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "maxResults": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "maxResults": 9007199254740992,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 0",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 0,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 5e-324",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 1.5",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric -1",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 1e+308,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric -1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 1.7976931348623157e+308,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "contextLines numeric 9007199254740992",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "contextLines": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 9007199254740992,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 0",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 0
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "timeout_ms": 0,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 5e-324",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 1.5",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric -1",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 1e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "timeout_ms": 1e+308,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric -1e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 1.7976931348623157e+308",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "timeout_ms": 1.7976931348623157e+308,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "timeout_ms numeric 9007199254740992",
+      "input": {
+        "path": "sample",
+        "pattern": "needle",
+        "timeout_ms": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "path": "sample",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "timeout_ms": 9007199254740992,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 0",
+      "input": {
+        "sessionId": "sample",
+        "offset": 0
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 5e-324",
+      "input": {
+        "sessionId": "sample",
+        "offset": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 1.5",
+      "input": {
+        "sessionId": "sample",
+        "offset": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric -1",
+      "input": {
+        "sessionId": "sample",
+        "offset": -1
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": -1,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 1e+308",
+      "input": {
+        "sessionId": "sample",
+        "offset": 1e+308
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 1e+308,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric -1e+308",
+      "input": {
+        "sessionId": "sample",
+        "offset": -1e+308
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": -1e+308,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 1.7976931348623157e+308",
+      "input": {
+        "sessionId": "sample",
+        "offset": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 1.7976931348623157e+308,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "offset numeric 9007199254740992",
+      "input": {
+        "sessionId": "sample",
+        "offset": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 9007199254740992,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 0",
+      "input": {
+        "sessionId": "sample",
+        "length": 0
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 5e-324",
+      "input": {
+        "sessionId": "sample",
+        "length": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 1.5",
+      "input": {
+        "sessionId": "sample",
+        "length": 1.5
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric -1",
+      "input": {
+        "sessionId": "sample",
+        "length": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 1e+308",
+      "input": {
+        "sessionId": "sample",
+        "length": 1e+308
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 1e+308
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric -1e+308",
+      "input": {
+        "sessionId": "sample",
+        "length": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 1.7976931348623157e+308",
+      "input": {
+        "sessionId": "sample",
+        "length": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "length numeric 9007199254740992",
+      "input": {
+        "sessionId": "sample",
+        "length": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "sessionId": "sample",
+        "offset": 0,
+        "length": 9007199254740992
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 0",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 0
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 0
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 5e-324",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 5e-324
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 5e-324
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 1.5",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1.5
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1.5
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric -1",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": -1
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": -1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 1e+308",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1e+308
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1e+308
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric -1e+308",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": -1e+308
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": -1e+308
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 1.7976931348623157e+308",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "expected_replacements numeric 9007199254740992",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 9007199254740992
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 0",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 0
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 0
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 5e-324",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 5e-324
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 5e-324
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 1.5",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 1.5
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 1.5
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric -1",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": -1
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": -1
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 1e+308",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 1e+308
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 1e+308
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric -1e+308",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": -1e+308
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": -1e+308
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 1.7976931348623157e+308",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "timeout_ms numeric 9007199254740992",
+      "input": {
+        "command": "echo sample",
+        "timeout_ms": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "command": "echo sample",
+        "timeout_ms": 9007199254740992
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 0",
+      "input": {
+        "pid": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 0
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 5e-324",
+      "input": {
+        "pid": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 5e-324
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 1.5",
+      "input": {
+        "pid": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 1.5
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric -1",
+      "input": {
+        "pid": -1
+      },
+      "success": true,
+      "data": {
+        "pid": -1
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 1e+308",
+      "input": {
+        "pid": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric -1e+308",
+      "input": {
+        "pid": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": -1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "pid numeric 9007199254740992",
+      "input": {
+        "pid": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 9007199254740992
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 0",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 0
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 5e-324",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 5e-324
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 1.5",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 1.5
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric -1",
+      "input": {
+        "pid": 123,
+        "timeout_ms": -1
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": -1
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 1e+308",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric -1e+308",
+      "input": {
+        "pid": 123,
+        "timeout_ms": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": -1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "timeout_ms numeric 9007199254740992",
+      "input": {
+        "pid": 123,
+        "timeout_ms": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "timeout_ms": 9007199254740992
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 0",
+      "input": {
+        "pid": 123,
+        "offset": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 0
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 5e-324",
+      "input": {
+        "pid": 123,
+        "offset": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 5e-324
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 1.5",
+      "input": {
+        "pid": 123,
+        "offset": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 1.5
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric -1",
+      "input": {
+        "pid": 123,
+        "offset": -1
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": -1
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 1e+308",
+      "input": {
+        "pid": 123,
+        "offset": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric -1e+308",
+      "input": {
+        "pid": 123,
+        "offset": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": -1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 123,
+        "offset": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "offset numeric 9007199254740992",
+      "input": {
+        "pid": 123,
+        "offset": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "offset": 9007199254740992
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 0",
+      "input": {
+        "pid": 123,
+        "length": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 0
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 5e-324",
+      "input": {
+        "pid": 123,
+        "length": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 5e-324
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 1.5",
+      "input": {
+        "pid": 123,
+        "length": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 1.5
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric -1",
+      "input": {
+        "pid": 123,
+        "length": -1
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": -1
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 1e+308",
+      "input": {
+        "pid": 123,
+        "length": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric -1e+308",
+      "input": {
+        "pid": 123,
+        "length": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": -1e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 123,
+        "length": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "read_process_output",
+      "label": "length numeric 9007199254740992",
+      "input": {
+        "pid": 123,
+        "length": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "length": 9007199254740992
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 0",
+      "input": {
+        "pid": 0,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 0,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 5e-324",
+      "input": {
+        "pid": 5e-324,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 5e-324,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 1.5",
+      "input": {
+        "pid": 1.5,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 1.5,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric -1",
+      "input": {
+        "pid": -1,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": -1,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 1e+308",
+      "input": {
+        "pid": 1e+308,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 1e+308,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric -1e+308",
+      "input": {
+        "pid": -1e+308,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": -1e+308,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 1.7976931348623157e+308,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 1.7976931348623157e+308,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "pid numeric 9007199254740992",
+      "input": {
+        "pid": 9007199254740992,
+        "input": "sample"
+      },
+      "success": true,
+      "data": {
+        "pid": 9007199254740992,
+        "input": "sample"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 0",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 0
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 5e-324",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 5e-324
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 1.5",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1.5
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric -1",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": -1
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": -1
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 1e+308",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1e+308
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric -1e+308",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": -1e+308
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "timeout_ms numeric 9007199254740992",
+      "input": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "sample",
+        "timeout_ms": 9007199254740992
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 0",
+      "input": {
+        "pid": 0
+      },
+      "success": true,
+      "data": {
+        "pid": 0
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 5e-324",
+      "input": {
+        "pid": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 5e-324
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 1.5",
+      "input": {
+        "pid": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 1.5
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric -1",
+      "input": {
+        "pid": -1
+      },
+      "success": true,
+      "data": {
+        "pid": -1
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 1e+308",
+      "input": {
+        "pid": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1e+308
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric -1e+308",
+      "input": {
+        "pid": -1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": -1e+308
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "force_terminate",
+      "label": "pid numeric 9007199254740992",
+      "input": {
+        "pid": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 9007199254740992
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 0",
+      "input": {
+        "pid": 0
+      },
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 5e-324",
+      "input": {
+        "pid": 5e-324
+      },
+      "success": true,
+      "data": {
+        "pid": 5e-324
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 1.5",
+      "input": {
+        "pid": 1.5
+      },
+      "success": true,
+      "data": {
+        "pid": 1.5
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric -1",
+      "input": {
+        "pid": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 1e+308",
+      "input": {
+        "pid": 1e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1e+308
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric -1e+308",
+      "input": {
+        "pid": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 1.7976931348623157e+308",
+      "input": {
+        "pid": 1.7976931348623157e+308
+      },
+      "success": true,
+      "data": {
+        "pid": 1.7976931348623157e+308
+      }
+    },
+    {
+      "tool": "kill_process",
+      "label": "pid numeric 9007199254740992",
+      "input": {
+        "pid": 9007199254740992
+      },
+      "success": true,
+      "data": {
+        "pid": 9007199254740992
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 0",
+      "input": {
+        "maxResults": 0
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 5e-324",
+      "input": {
+        "maxResults": 5e-324
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 1.5",
+      "input": {
+        "maxResults": 1.5
+      },
+      "success": true,
+      "data": {
+        "maxResults": 1.5
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric -1",
+      "input": {
+        "maxResults": -1
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 1e+308",
+      "input": {
+        "maxResults": 1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric -1e+308",
+      "input": {
+        "maxResults": -1e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 1.7976931348623157e+308",
+      "input": {
+        "maxResults": 1.7976931348623157e+308
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "maxResults numeric 9007199254740992",
+      "input": {
+        "maxResults": 9007199254740992
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 0",
+      "input": {
+        "path": "sample.txt",
+        "options": {}
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000,
+        "options": {}
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 1",
+      "input": {
+        "path": "sample.txt",
+        "options": {}
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000,
+        "options": {}
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 2",
+      "input": {
+        "path": "sample.txt",
+        "options": []
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 3",
+      "input": {
+        "path": "sample.txt",
+        "options": null
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 4",
+      "input": {
+        "path": "sample.txt",
+        "options": true
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 5",
+      "input": {
+        "path": "sample.txt",
+        "options": "text"
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "options record boundary 6",
+      "input": {
+        "path": "sample.txt",
+        "options": {
+          "__proto__": {
+            "probe": true
+          },
+          "constructor": "value",
+          "prototype": 42,
+          "toString": true,
+          "": null
+        }
+      },
+      "success": true,
+      "data": {
+        "path": "sample.txt",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000,
+        "options": {
+          "constructor": "value",
+          "prototype": 42,
+          "toString": true,
+          "": null
+        }
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 0",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": {}
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1,
+        "options": {}
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 1",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": {}
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1,
+        "options": {}
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 2",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": []
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 3",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": null
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 4",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": true
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 5",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": "text"
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "options record boundary 6",
+      "input": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "options": {
+          "__proto__": {
+            "probe": true
+          },
+          "constructor": "value",
+          "prototype": 42,
+          "toString": true,
+          "": null
+        }
+      },
+      "success": true,
+      "data": {
+        "file_path": "sample.txt",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1,
+        "options": {
+          "constructor": "value",
+          "prototype": 42,
+          "toString": true,
+          "": null
+        }
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 0",
+      "input": {
+        "event": "sample",
+        "params": {}
+      },
+      "success": true,
+      "data": {
+        "event": "sample",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 1",
+      "input": {
+        "event": "sample",
+        "params": {}
+      },
+      "success": true,
+      "data": {
+        "event": "sample",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 2",
+      "input": {
+        "event": "sample",
+        "params": []
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 3",
+      "input": {
+        "event": "sample",
+        "params": null
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 4",
+      "input": {
+        "event": "sample",
+        "params": true
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 5",
+      "input": {
+        "event": "sample",
+        "params": "text"
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "params record boundary 6",
+      "input": {
+        "event": "sample",
+        "params": {
+          "__proto__": {
+            "probe": true
+          },
+          "constructor": "value",
+          "prototype": 42,
+          "toString": true,
+          "": null
+        }
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary \"\"",
+      "input": {
+        "origin": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary \" \"",
+      "input": {
+        "origin": " "
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary \"日本語\"",
+      "input": {
+        "origin": "日本語"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "origin": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "origin": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary 123",
+      "input": {
+        "origin": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "get_config",
+      "label": "origin string boundary null",
+      "input": {
+        "origin": null
+      },
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary \"\"",
+      "input": {
+        "key": "",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary \" \"",
+      "input": {
+        "key": " ",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": " ",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary \"日本語\"",
+      "input": {
+        "key": "日本語",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "日本語",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "key": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "key": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "value": [
+          "sample"
+        ]
+      },
+      "success": true,
+      "data": {
+        "key": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "value": [
+          "sample"
+        ]
+      }
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary 123",
+      "input": {
+        "key": 123,
+        "value": [
+          "sample"
+        ]
+      },
+      "success": false
+    },
+    {
+      "tool": "set_config_value",
+      "label": "key string boundary null",
+      "input": {
+        "key": null,
+        "value": [
+          "sample"
+        ]
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": ""
+      },
+      "success": true,
+      "data": {
+        "path": "",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " "
+      },
+      "success": true,
+      "data": {
+        "path": " ",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "isUrl": false,
+        "offset": 0,
+        "length": 1000
+      }
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "read_file",
+      "label": "path string boundary null",
+      "input": {
+        "path": null
+      },
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": "",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " ",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": " ",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "sample"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "sample",
+        "mode": "rewrite"
+      }
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123,
+        "content": "sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_file",
+      "label": "path string boundary null",
+      "input": {
+        "path": null,
+        "content": "sample"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": "",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": "",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " ",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": " ",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "# Example"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "content": "# Example"
+      }
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123,
+        "content": "# Example"
+      },
+      "success": false
+    },
+    {
+      "tool": "write_pdf",
+      "label": "path string boundary null",
+      "input": {
+        "path": null,
+        "content": "# Example"
+      },
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": ""
+      },
+      "success": true,
+      "data": {
+        "path": ""
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " "
+      },
+      "success": true,
+      "data": {
+        "path": " "
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語"
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "create_directory",
+      "label": "path string boundary null",
+      "input": {
+        "path": null
+      },
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": ""
+      },
+      "success": true,
+      "data": {
+        "path": "",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " "
+      },
+      "success": true,
+      "data": {
+        "path": " ",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "depth": 2
+      }
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "list_directory",
+      "label": "path string boundary null",
+      "input": {
+        "path": null
+      },
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary \"\"",
+      "input": {
+        "source": "",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": "",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary \" \"",
+      "input": {
+        "source": " ",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": " ",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary \"日本語\"",
+      "input": {
+        "source": "日本語",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": "日本語",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "source": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "source": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "destination": "after.txt"
+      },
+      "success": true,
+      "data": {
+        "source": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "destination": "after.txt"
+      }
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary 123",
+      "input": {
+        "source": 123,
+        "destination": "after.txt"
+      },
+      "success": false
+    },
+    {
+      "tool": "move_file",
+      "label": "source string boundary null",
+      "input": {
+        "source": null,
+        "destination": "after.txt"
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": "",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": "",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " ",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": " ",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "pattern": "needle"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "pattern": "needle",
+        "searchType": "files",
+        "ignoreCase": true,
+        "includeHidden": false,
+        "contextLines": 5,
+        "literalSearch": false
+      }
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123,
+        "pattern": "needle"
+      },
+      "success": false
+    },
+    {
+      "tool": "start_search",
+      "label": "path string boundary null",
+      "input": {
+        "path": null,
+        "pattern": "needle"
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary \"\"",
+      "input": {
+        "sessionId": ""
+      },
+      "success": true,
+      "data": {
+        "sessionId": "",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary \" \"",
+      "input": {
+        "sessionId": " "
+      },
+      "success": true,
+      "data": {
+        "sessionId": " ",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary \"日本語\"",
+      "input": {
+        "sessionId": "日本語"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "日本語",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "offset": 0,
+        "length": 100
+      }
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary 123",
+      "input": {
+        "sessionId": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "get_more_search_results",
+      "label": "sessionId string boundary null",
+      "input": {
+        "sessionId": null
+      },
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary \"\"",
+      "input": {
+        "sessionId": ""
+      },
+      "success": true,
+      "data": {
+        "sessionId": ""
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary \" \"",
+      "input": {
+        "sessionId": " "
+      },
+      "success": true,
+      "data": {
+        "sessionId": " "
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary \"日本語\"",
+      "input": {
+        "sessionId": "日本語"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "日本語"
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "sessionId": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary 123",
+      "input": {
+        "sessionId": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "stop_search",
+      "label": "sessionId string boundary null",
+      "input": {
+        "sessionId": null
+      },
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary \"\"",
+      "input": {
+        "path": ""
+      },
+      "success": true,
+      "data": {
+        "path": ""
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary \" \"",
+      "input": {
+        "path": " "
+      },
+      "success": true,
+      "data": {
+        "path": " "
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary \"日本語\"",
+      "input": {
+        "path": "日本語"
+      },
+      "success": true,
+      "data": {
+        "path": "日本語"
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary 123",
+      "input": {
+        "path": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "get_file_info",
+      "label": "path string boundary null",
+      "input": {
+        "path": null
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary \"\"",
+      "input": {
+        "file_path": "",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary \" \"",
+      "input": {
+        "file_path": " ",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": " ",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary \"日本語\"",
+      "input": {
+        "file_path": "日本語",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "日本語",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "file_path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "file_path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": true,
+      "data": {
+        "file_path": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "old_string": "before",
+        "new_string": "",
+        "expected_replacements": 1
+      }
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary 123",
+      "input": {
+        "file_path": 123,
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "edit_block",
+      "label": "file_path string boundary null",
+      "input": {
+        "file_path": null,
+        "old_string": "before",
+        "new_string": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary \"\"",
+      "input": {
+        "command": "",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": "",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary \" \"",
+      "input": {
+        "command": " ",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": " ",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary \"日本語\"",
+      "input": {
+        "command": "日本語",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": "日本語",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "command": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "command": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "timeout_ms": 100
+      },
+      "success": true,
+      "data": {
+        "command": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "timeout_ms": 100
+      }
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary 123",
+      "input": {
+        "command": 123,
+        "timeout_ms": 100
+      },
+      "success": false
+    },
+    {
+      "tool": "start_process",
+      "label": "command string boundary null",
+      "input": {
+        "command": null,
+        "timeout_ms": 100
+      },
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary \"\"",
+      "input": {
+        "pid": 123,
+        "input": ""
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": ""
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary \" \"",
+      "input": {
+        "pid": 123,
+        "input": " "
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": " "
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary \"日本語\"",
+      "input": {
+        "pid": 123,
+        "input": "日本語"
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "日本語"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "pid": 123,
+        "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "pid": 123,
+        "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "pid": 123,
+        "input": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary 123",
+      "input": {
+        "pid": 123,
+        "input": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "interact_with_process",
+      "label": "input string boundary null",
+      "input": {
+        "pid": 123,
+        "input": null
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary \"\"",
+      "input": {
+        "toolName": ""
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "toolName": ""
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary \" \"",
+      "input": {
+        "toolName": " "
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "toolName": " "
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary \"日本語\"",
+      "input": {
+        "toolName": "日本語"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "toolName": "日本語"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "toolName": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "toolName": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "toolName": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "maxResults": 50,
+        "toolName": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      }
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary 123",
+      "input": {
+        "toolName": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "get_recent_tool_calls",
+      "label": "toolName string boundary null",
+      "input": {
+        "toolName": null
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary \"\"",
+      "input": {
+        "event": ""
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary \" \"",
+      "input": {
+        "event": " "
+      },
+      "success": true,
+      "data": {
+        "event": " ",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary \"日本語\"",
+      "input": {
+        "event": "日本語"
+      },
+      "success": true,
+      "data": {
+        "event": "日本語",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "event": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": true,
+      "data": {
+        "event": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂",
+        "component": "file_preview",
+        "params": {}
+      }
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary \"🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂\"",
+      "input": {
+        "event": "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂"
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary 123",
+      "input": {
+        "event": 123
+      },
+      "success": false
+    },
+    {
+      "tool": "track_ui_event",
+      "label": "event string boundary null",
+      "input": {
+        "event": null
+      },
+      "success": false
+    }
+  ]
+}

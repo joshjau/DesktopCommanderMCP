@@ -63,7 +63,7 @@ export const ReadFileArgsSchema = z.object({
   length: z.number().optional().default(1000),
   sheet: z.string().optional(),  // String only for MCP client compatibility (Cursor doesn't support union types in JSON Schema)
   range: z.string().optional(),
-  options: z.record(z.any()).optional(),
+  options: z.record(z.string(), z.any()).optional(),
   // Whether the call came from the file-preview UI (refresh/navigation) or the
   // LLM. 'ui' calls are excluded from tool-call telemetry; see isUiOriginCall
   // in server.ts.
@@ -157,7 +157,7 @@ export const EditBlockArgsSchema = z.object({
   // Structured file range rewrite (Excel, etc.)
   range: z.string().optional(),
   content: z.any().optional(),
-  options: z.record(z.any()).optional(),
+  options: z.record(z.string(), z.any()).optional(),
   // 'ui' when fired by the file-preview UI, else 'llm'. 'ui' calls are
   // excluded from tool-call telemetry; see isUiOriginCall in server.ts.
   origin: z.enum(['ui', 'llm']).optional(),
@@ -196,7 +196,9 @@ export const GiveFeedbackArgsSchema = z.object({
 /** A whole number (at least `min`, if given), rejected with a message that says so */
 function wholeNumber(name: string, min?: number) {
   const message = `${name} must be a whole number${min === undefined ? '' : ` of at least ${min}`}`;
-  const number = z.number().int({ message });
+  // Zod 3 accepted every Number.isInteger value, not only safe integers.
+  // Preserve that input contract and its published integer schema in Zod 4.
+  const number = z.number().refine(Number.isInteger, { message }).meta({ type: 'integer' });
   return min === undefined ? number : number.min(min, { message });
 }
 
@@ -231,16 +233,38 @@ export const StopSearchArgsSchema = z.object({
 export const ListSearchesArgsSchema = z.object({});
 
 // Tool history schema
+const HistoryTimestampSchema = z.union([
+  z.iso.datetime(),
+  z.iso.datetime({ precision: -1 }),
+]);
+
 export const GetRecentToolCallsArgsSchema = z.object({
   maxResults: z.number().min(1).max(1000).optional().default(50),
   toolName: z.string().optional(),
-  since: z.string().datetime().optional(),
+  // Zod 3 also accepted minute precision. Keep both native ISO validators and
+  // the existing single date-time input schema instead of narrowing callers.
+  since: z.string().refine(value => HistoryTimestampSchema.safeParse(value).success,
+    { message: 'Invalid datetime' }).meta({ format: 'date-time' }).optional(),
 });
 
+const UiEventParamValueSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+const UiEventParamsSchema = z.preprocess((value, context) => {
+  // Zod 4 skips __proto__ while parsing records. Zod 3 first validated its
+  // own value, so do not newly accept an invalid scalar parameter there.
+  if (value !== null && typeof value === 'object'
+    && Object.prototype.hasOwnProperty.call(value, '__proto__')
+    && !UiEventParamValueSchema.safeParse((value as Record<string, unknown>)['__proto__']).success) {
+    context.addIssue({ code: 'custom', path: ['__proto__'], message: 'Invalid event parameter value' });
+  }
+  return value;
+}, z.record(z.string(), UiEventParamValueSchema).optional().default({}));
+
 export const TrackUiEventArgsSchema = z.object({
-  event: z.string().min(1).max(80),
+  // Preserve Zod 3's UTF-16 length limit as well as the published maxLength.
+  event: z.string().min(1).max(80).refine(value => value.length <= 80,
+    { message: 'String must contain at most 80 character(s)' }),
   component: z.string().optional().default('file_preview'),
-  params: z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])).optional().default({}),
+  params: UiEventParamsSchema,
 });
 
 /**
@@ -248,7 +272,7 @@ export const TrackUiEventArgsSchema = z.object({
  * about parameters a caller sent that the tool does not support. Keep in sync
  * with the tool definitions in server.ts.
  */
-export const toolArgSchemas: Record<string, z.ZodTypeAny> = {
+export const toolArgSchemas: Record<string, z.ZodType> = {
   get_config: GetConfigArgsSchema,
   set_config_value: SetConfigValueArgsSchema,
   read_file: ReadFileArgsSchema,

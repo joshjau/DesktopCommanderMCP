@@ -8,7 +8,7 @@
   "homepage": "https://github.com/wonderwhy-er/DesktopCommanderMCP",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wonderwhy-er/DesktopCommanderMCP.git"
+    "url": "https://github.com/joshjau/DesktopCommanderMCP.git"
   },
   "bugs": "https://github.com/wonderwhy-er/DesktopCommanderMCP/issues",
   "type": "module",
@@ -31,7 +31,7 @@
     "open-chat": "open -n /Applications/Claude.app",
     "device:install": "cd src/remote-device && npm install",
     "device:start": "tsx src/remote-device/device.ts",
-    "device:start:dev": "nodemon --watch src/remote-device --exec tsx src/remote-device/device.ts",
+    "device:start:dev": "node --import tsx --watch src/remote-device/device.ts",
     "sync-version": "node scripts/sync-version.js",
     "bump": "node scripts/sync-version.js --bump",
     "bump:minor": "node scripts/sync-version.js --bump --minor",
@@ -106,7 +106,6 @@
     "cross-fetch": "^4.1.0",
     "exceljs": "^4.4.0",
     "fastest-levenshtein": "^1.0.16",
-    "glob": "^10.3.10",
     "highlight.js": "^11.11.1",
     "isbinaryfile": "^5.0.4",
     "markdown-it": "^14.1.0",
@@ -122,8 +121,7 @@
     "tiptap-markdown": "^0.9.0",
     "unified": "^11.0.5",
     "unpdf": "~1.8.1",
-    "zod": "^3.24.1",
-    "zod-to-json-schema": "^3.23.5"
+    "zod": "^4.6.7"
   },
   "bundleDependencies": [
     "@desktop-commander/telemetry-contract"
@@ -132,16 +130,13 @@
     "caffeinate": "^1.0.1"
   },
   "devDependencies": {
-    "@anthropic-ai/mcpb": "^1.2.0",
     "@modelcontextprotocol/ext-apps": "^1.0.1",
     "@types/node": "^20.17.24",
     "@types/proper-lockfile": "^4.1.4",
     "commander": "^13.1.0",
-    "esbuild": "^0.27.2",
+    "esbuild": "^0.28.2",
     "js-tiktoken": "^1.0.21",
     "jsdom": "^24.1.3",
-    "nexe": "^5.0.0-beta.4",
-    "nodemon": "^3.0.2",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
@@ -157,5 +152,7 @@
     },
     "proxy-addr": "^2.0.8",
     "argparse": "^2.0.1"
-  }
+  },
+  "private": true,
+  "packageManager": "npm@12.2.2"
 }
