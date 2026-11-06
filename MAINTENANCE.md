@@ -16,9 +16,10 @@ maintenance build, not an official Desktop Commander release.
   Unused `ts-node` is removed; the existing `tsx` development commands remain.
   The dependency minimum is Node 24.15; GamingPC uses the exact Node 26.13.0 pin.
 - PDF image extraction handles unpdf 2's RGBA bytes explicitly. The text
-  converter retains its own scoped unpdf 1.8.1 dependency: newer 1.x font
-  objects break its Markdown transformations. The root image reader and legacy
-  text reader are tested together, including the production-only installation.
+  converter uses pdf2md 0.3.6, whose upstream font-metadata fix permits its
+  compatible unpdf 1.9.1 dependency without the former 1.8.1 override. The root
+  image reader and text reader retain their own supported version ranges and
+  are tested together, including the production-only installation.
 - MCP Apps 2 retains the existing UI protocol and host-side model-context
   capability negotiation. Partial host theme tokens, editor mount, settings
   edits and teardown are checked against the actual rebuilt bundles.
@@ -93,7 +94,7 @@ fork; no upstream PR, npm publication or hosted CI is part of this workflow.
   tree. All 655 installed registry packages had verified signatures; 99 had
   verified attestations. This is a registry-advisory check, not a comprehensive
   security certification.
-- All 182 unit/regression modules were validated by the full run and four
+- The major-toolchain baseline's 182 unit/regression modules were validated by the full run and four
   affected reruns. The startup failure-injection fixture now targets the text
   converter's separate dependency. PDF RGBA pixels/dimensions and the existing
   UI protocol with partial theme updates have explicit regression coverage.
@@ -110,3 +111,14 @@ fork; no upstream PR, npm publication or hosted CI is part of this workflow.
 - The installed-release smoke check reads synthetic PDF text and an embedded
   image through the real MCP tool, in addition to file/edit/search/process,
   XLSX, Sharp, ripgrep and both rebuilt UI resources.
+
+### PDF maintenance follow-up
+
+Only pdf2md 0.3.4 to 0.3.6 and its compatible nested unpdf 1.8.1 to 1.9.1
+changed in the locked dependency graph. The temporary font-compatibility
+override is removed. Eight affected PDF/startup/UI-provenance modules passed
+their checks and focused rerun, including an actual PDF font regression checked
+through a Markdown renderer. The local MCP/native smoke check and registry
+audit, signature and dependency-consistency checks passed. Reuse the baseline
+release gates for unchanged code; install and accept the exact published commit
+before an idle RDC handoff.

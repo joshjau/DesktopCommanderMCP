@@ -92,7 +92,7 @@
   "dependencies": {
     "@desktop-commander/telemetry-contract": "file:vendor/telemetry-contract",
     "@modelcontextprotocol/sdk": "^1.32.1",
-    "@opendocsg/pdf2md": "0.3.4",
+    "@opendocsg/pdf2md": "0.3.6",
     "@supabase/supabase-js": "^2.89.0",
     "@tiptap/core": "^3.31.4",
     "@tiptap/extension-image": "^3.31.4",
@@ -143,9 +143,6 @@
     "ws": "^8.18.3"
   },
   "overrides": {
-    "@opendocsg/pdf2md": {
-      "unpdf": "1.8.1"
-    },
     "md-to-pdf": {
       "chokidar": "^4.0.3"
     },
