@@ -1,4 +1,4 @@
-# GamingPC reviewed source build
+# GamingPC maintained build
 
 This fork starts from upstream Desktop Commander **v0.3.1** (MIT). It retains
 the remote protocol, device pairing and configuration locations. It is a local
@@ -55,38 +55,48 @@ comes from the locked platform package; check it before search acceptance.
 The manifest validator and receiving-host smoke command also use isolated
 temporary homes and disable telemetry and production feature-flag calls.
 
-## Install and preserve access
+## One command on GamingPC
 
-Deploy only the exact published, validated commit into an immutable directory:
-`%LOCALAPPDATA%\Programs\DesktopCommanderRemote\releases\<full-commit>`.
-Copy the validated `dist` output, install production dependencies from its
-committed lock with `npm ci --omit=dev --ignore-scripts --install-links`, then
-perform isolated local MCP and native-module smoke checks. Retain a local
-`release-receipt.json` with the source commit and SHA256 hashes of the lock,
-entry point and rebuilt UI outputs. Host receipts and dependencies are not Git
-source.
+The maintained checkout is `C:\github repositories\DesktopCommanderMCP`.
+After building it, install its command once using native PowerShell 7:
 
-The reviewed `scripts/start-reviewed-remote.ps1` checks the receipt, exact Node
-version, existing agents and the launch mutex. Copy the tracked
-`scripts/Start-DesktopCommanderRemote.ps1` wrapper into the existing shortcut
-directory. Its local `approved-release.json` selects `sourceCommit` and
-`nodePath`; it delegates to the immutable release. It never installs packages at launch.
-Keep one remote agent; leave a running agent and its jobs alive until a safe
-handoff. Pairing/configuration remain in their original user directories.
+```powershell
+& .\scripts\install-command.ps1
+```
 
-Retain the former official launcher as historical recovery evidence only. Its
-`npx @latest` route can download the vulnerable published package again;
-returning to official requires a fresh security/compatibility review and an idle
-handoff. Keep the validated source release, receipt, approved selection and
-pairing outside any cache cleanup target.
+Then run this from any directory:
 
-The old official npm execution cache was removed on 2026-11-06 after verifying
-its physical boundary and lack of active consumers. The reviewed RDC agent
-remained online; package metadata and baseline hashes were retained separately.
-For later cache cleanup, first verify that the exact superseded directory has
-no links, mounts or active jobs. Do not activate automatic startup, reset pairing
-or stop unrelated processes. Source changes are committed and pushed to this
-fork; no upstream PR, npm publication or hosted CI is part of this workflow.
+```powershell
+desktop-commander remote
+```
+
+The installer puts a small CMD shim in the existing `%USERPROFILE%\.local\bin`
+PATH directory. It calls `scripts/desktop-commander.ps1` in this checkout.
+That launcher selects the installed Node/npm pair from `.node-version` and
+`packageManager`, refreshes only its child PATH, and runs `dist/index.js`.
+It preserves arguments and exit status, blocks duplicate remote agents with
+a lifetime mutex and process check, and never installs anything at launch.
+The Desktop shortcut uses the same command. No administrator access or
+automatic startup is needed.
+
+Use `desktop-commander remote --help` for options. Keep its terminal open while
+access is needed. Pairing and settings remain in their original user folders.
+Before updating dependencies or rebuilding the active checkout, arrange an idle
+handoff: finish attached jobs, stop only the verified agent and executor, apply
+and validate the change, then start one agent and check a live tool call.
+Do not rebuild under a running agent: deferred imports can mix old and new code.
+
+There are no separate release copies, selector files or launch-time hash
+receipts. The former copies were retired during the 2026-11-06 simplification;
+their small metadata/recovery files remain in local maintenance evidence.
+The old official npm execution cache was also retired earlier that day.
+The raw `npx @wonderwhy-er/desktop-commander@latest` command selects upstream,
+which does not contain this fork's fixes. Reconsider it only after a fresh
+upstream security/compatibility review and an idle handoff.
+
+Commit and push scoped source changes to this fork. Keep generated builds,
+dependencies, local evidence and pairing out of Git. No upstream PR, npm
+publication or hosted CI is part of this workflow.
 
 ## Validated on GamingPC, 2026-11-06
 
@@ -119,6 +129,16 @@ changed in the locked dependency graph. The temporary font-compatibility
 override is removed. Eight affected PDF/startup/UI-provenance modules passed
 their checks and focused rerun, including an actual PDF font regression checked
 through a Markdown renderer. The local MCP/native smoke check and registry
-audit, signature and dependency-consistency checks passed. Reuse the baseline
-release gates for unchanged code; install and accept the exact published commit
-before an idle RDC handoff.
+audit, signature and dependency-consistency checks passed. Reuse these gates
+for unchanged code; run affected checks when maintaining the checkout.
+
+### Command simplification
+
+Only the Windows command/install scripts, CLI examples and related guidance
+change. Dependencies and all PDF, schema and UI fixes are retained. The focused
+Windows command regression uses an inert checkout with spaces in its path and
+an isolated user home. It checks argument quoting, child exit status, duplicate
+protection, diagnostic access, installer ownership and a missing build. Run it
+with `node test/run-all-tests.js test-windows-command.js`; also accept the
+rebuilt checkout with `node scripts/smoke-installed-release.js --expected-root
+"C:\github repositories\DesktopCommanderMCP"` before the live handoff.

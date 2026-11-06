@@ -1,4 +1,7 @@
 # Desktop Commander MCP
+
+> **Maintained fork:** GamingPC uses this checkout's reviewed security and compatibility fixes through `desktop-commander remote`. See [MAINTENANCE.md](MAINTENANCE.md) for setup and validation.
+
 ### Search, update, manage files and run terminal commands with AI
 
 [![npm downloads](https://img.shields.io/npm/dw/@wonderwhy-er/desktop-commander)](https://www.npmjs.com/package/@wonderwhy-er/desktop-commander)
@@ -462,13 +465,13 @@ Use Desktop Commander from **ChatGPT**, **Claude web**, and other AI services wh
 Start the Remote Device:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote
+desktop-commander remote
 ```
 
 On first run, complete browser authentication, then connect your AI at **[mcp.desktopcommander.app](https://mcp.desktopcommander.app)**.
 
 - Stop the local device temporarily with `Ctrl+C`
-- See available CLI options with `npx @wonderwhy-er/desktop-commander@latest remote --help`
+- See available CLI options with `desktop-commander remote --help`
 - See **[Remote MCP setup, logout/revocation, CLI reference, and troubleshooting](src/remote-device/README.md)**
 
 ### Security

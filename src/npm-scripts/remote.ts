@@ -39,10 +39,10 @@ Options:
   -h, --help             Show this help
 
 Examples:
-  npx @wonderwhy-er/desktop-commander@latest remote
-  npx @wonderwhy-er/desktop-commander@latest remote --debug
-  npx @wonderwhy-er/desktop-commander@latest remote --logout
-  npx @wonderwhy-er/desktop-commander@latest remote --report
+  desktop-commander remote
+  desktop-commander remote --debug
+  desktop-commander remote --logout
+  desktop-commander remote --report
 
 Note:
   --logout removes local credentials only. Revoke the device in the Remote MCP

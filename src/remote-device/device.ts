@@ -328,8 +328,8 @@ export class MCPDevice {
                 console.log('└─ Press Ctrl+C to disconnect.');
                 console.log('');
                 console.log('┌─ Commands');
-                console.log('│ Help:    npx @wonderwhy-er/desktop-commander@latest remote --help');
-                console.log('│ Log out: npx @wonderwhy-er/desktop-commander@latest remote --logout');
+                console.log('│ Help:    desktop-commander remote --help');
+                console.log('│ Log out: desktop-commander remote --logout');
                 console.log('└─ Run these in a new Terminal, or after disconnecting.');
                 console.log('');
             }

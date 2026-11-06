@@ -12,13 +12,7 @@ Desktop Commander Remote MCP lets web-based AI clients such as **ChatGPT** and *
 
 ### 1. Start the Remote Device
 
-The recommended command is:
-
-```bash
-npx @wonderwhy-er/desktop-commander@latest remote
-```
-
-If Desktop Commander is installed globally, the shorter equivalent is:
+For the maintained GamingPC checkout, install the per-user command as described in [MAINTENANCE.md](../../MAINTENANCE.md), then run:
 
 ```bash
 desktop-commander remote
@@ -70,7 +64,7 @@ The Remote MCP service forwards tool calls to the connected device. The local De
 Session persistence is enabled by default. To require browser authorization on every start, run:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --no-persist-session
+desktop-commander remote --no-persist-session
 ```
 
 ## Stop, logout, revoke, or disconnect
@@ -89,7 +83,7 @@ These actions affect different parts of the Remote MCP connection:
 Run:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --logout
+desktop-commander remote --logout
 ```
 
 This removes `~/.desktop-commander-device/device.json`. It does **not** revoke the device in the Remote MCP dashboard.
@@ -101,7 +95,7 @@ For a completely clean authorization reset, revoke the device in the dashboard, 
 Show the built-in help:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --help
+desktop-commander remote --help
 ```
 
 The `-h` alias is also supported.
@@ -118,18 +112,18 @@ Common examples:
 
 ```bash
 # Start normally
-npx @wonderwhy-er/desktop-commander@latest remote
+desktop-commander remote
 
 # Start with verbose diagnostics
-npx @wonderwhy-er/desktop-commander@latest remote --debug
+desktop-commander remote --debug
 ```
 
 ```bash
 # Start without saving/reusing the session
-npx @wonderwhy-er/desktop-commander@latest remote --no-persist-session
+desktop-commander remote --no-persist-session
 
 # Remove saved local credentials
-npx @wonderwhy-er/desktop-commander@latest remote --logout
+desktop-commander remote --logout
 ```
 
 ### Sleep behavior on macOS
@@ -137,7 +131,7 @@ npx @wonderwhy-er/desktop-commander@latest remote --logout
 By default, the Remote Device uses macOS `caffeinate` while it is running so the machine does not go to sleep and unexpectedly become unavailable. To disable that behavior:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --disable-no-sleep
+desktop-commander remote --disable-no-sleep
 ```
 
 ## Troubleshooting
@@ -151,7 +145,7 @@ Use the verification URL and code printed in the terminal. The OAuth device flow
 Make sure the terminal running the Remote Device is still open. Restart:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote
+desktop-commander remote
 ```
 
 A normal restart reuses saved credentials. If the device authorization was revoked or is no longer valid, the CLI will require authorization again.
@@ -161,7 +155,7 @@ A normal restart reuses saved credentials. If the device authorization was revok
 For a local re-authentication, remove the saved credentials:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --logout
+desktop-commander remote --logout
 ```
 
 For a complete reset, also revoke the old device from the Remote MCP dashboard before pairing again.
@@ -171,7 +165,7 @@ For a complete reset, also revoke the old device from the Remote MCP dashboard b
 Start with verbose logging:
 
 ```bash
-npx @wonderwhy-er/desktop-commander@latest remote --debug
+desktop-commander remote --debug
 ```
 
 ### My AI client cannot reach the device
@@ -209,7 +203,7 @@ Or run it with automatic restart during development:
 npm run device:start:dev
 ```
 
-These contributor commands are separate from the recommended end-user command, `npx @wonderwhy-er/desktop-commander@latest remote`.
+These contributor commands are separate from the recommended end-user command, `desktop-commander remote`.
 
 ## Security and history
 
