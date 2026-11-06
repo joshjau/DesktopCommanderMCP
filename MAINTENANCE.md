@@ -142,3 +142,11 @@ protection, diagnostic access, installer ownership and a missing build. Run it
 with `node test/run-all-tests.js test-windows-command.js`; also accept the
 rebuilt checkout with `node scripts/smoke-installed-release.js --expected-root
 "C:\github repositories\DesktopCommanderMCP"` before the live handoff.
+
+### Markdown maintenance follow-up
+
+The compatible Markdown autolink dependency advances from 2.0.1 to 2.1.0.
+Seven affected Markdown, rebuilt-UI, startup and PDF modules pass. Registry
+audit, signature and dependency-consistency checks pass. Keep tslib 2.8.1:
+five current Supabase packages require that exact version; the broader range
+belongs to an optional runtime not installed on this Windows host.
