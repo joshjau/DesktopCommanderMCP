@@ -62,11 +62,19 @@ directory. Its local `approved-release.json` selects `sourceCommit` and
 Keep one remote agent; leave a running agent and its jobs alive until a safe
 handoff. Pairing/configuration remain in their original user directories.
 
-Keep the previous launcher as a rollback file. Restoring it selects the official
-`@latest` package on the next start; it does not change an already running
-agent. Do not activate automatic startup, reset pairing or stop unrelated
-processes. Source changes are committed and pushed to this fork; no upstream
-PR, npm publication or hosted CI is part of this workflow.
+Retain the former official launcher as historical recovery evidence only. Its
+`npx @latest` route can download the vulnerable published package again;
+returning to official requires a fresh security/compatibility review and an idle
+handoff. Keep the validated source release, receipt, approved selection and
+pairing outside any cache cleanup target.
+
+The old official npm execution cache was removed on 2026-11-06 after verifying
+its physical boundary and lack of active consumers. The reviewed RDC agent
+remained online; package metadata and baseline hashes were retained separately.
+For later cache cleanup, first verify that the exact superseded directory has
+no links, mounts or active jobs. Do not activate automatic startup, reset pairing
+or stop unrelated processes. Source changes are committed and pushed to this
+fork; no upstream PR, npm publication or hosted CI is part of this workflow.
 
 ## Validated on GamingPC, 2026-11-06
 
